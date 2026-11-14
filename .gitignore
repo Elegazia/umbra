@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod] 
+# pycache files
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Market data: never commit; regenerate with the downloader
+data/
+*.parquet
+*.csv
+*.zip
+
+# Secrets
+.env
+.env.*
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Local tool config (machine-specific paths)
+.claude/
