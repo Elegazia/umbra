@@ -1,0 +1,14 @@
+We will have to perform the following record actions.
+
+Instrument definition
+Symbol - What we are trading
+Venue - The broker that we are using
+Venue_symbol - e.g. XBT/USDT (Base/Quote Currency)
+base_asset : BTC
+quote_asset : USDT
+instrument_type : 
+tick_size: Smallest price increment
+
+When reading from brokers: 
+Following considerations
+Asset-code normalisation needs a table. 
