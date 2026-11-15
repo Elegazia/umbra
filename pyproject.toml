@@ -37,3 +37,11 @@ select = [
     "RUF",  # ruff-specific rules
 ]
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = [
+    "--import-mode=importlib",
+    "--strict-markers",
+    "--strict-config",
+    "-ra"
+]
