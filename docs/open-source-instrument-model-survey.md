@@ -1,7 +1,7 @@
 # Instrument models in open-source trading systems
 
 - **Date:** 2026-11-07
-- **Purpose:** Input to [ADR 0002](0002-Record-Schema-and-DataSource-Interface). How established projects decided to model instruments, and why those decisions matter for Umbra. Companion to [instrument-definition-field-survey.md](instrument-definition-field-survey.md), which covers what Kraken, Binance and IBKR actually provide.
+- **Purpose:** Input to [ADR 0002](adr/0002-instrument-identity-and-definition.md). How established projects decided to model instruments, and why those decisions matter for Umbra. Companion to [instrument-definition-field-survey.md](instrument-definition-field-survey.md), which covers what Kraken, Binance and IBKR actually provide.
 - **Status:** Survey, not a decision.
 
 ## How this was checked

@@ -1,7 +1,7 @@
 # NautilusTrader adapters: how venue fields become instruments
 
 - **Date:** 2026-11-07
-- **Purpose:** Worked examples for [ADR 0002](0002-Record-Schema-and-DataSource-Interface). NautilusTrader's Kraken, Binance, Coinbase and Interactive Brokers adapters each convert a venue's instrument data into one common instrument model. This is a direct precedent for the mapping Umbra has to write. Companion to [instrument-definition-field-survey.md](instrument-definition-field-survey.md) (what the venues provide) and [open-source-instrument-model-survey.md](open-source-instrument-model-survey.md) (how projects model instruments).
+- **Purpose:** Worked examples for [ADR 0002](adr/0002-instrument-identity-and-definition.md). NautilusTrader's Kraken, Binance, Coinbase and Interactive Brokers adapters each convert a venue's instrument data into one common instrument model. This is a direct precedent for the mapping Umbra has to write. Companion to [instrument-definition-field-survey.md](instrument-definition-field-survey.md) (what the venues provide) and [open-source-instrument-model-survey.md](open-source-instrument-model-survey.md) (how projects model instruments).
 - **Status:** Survey, not a decision.
 
 ## How this was checked

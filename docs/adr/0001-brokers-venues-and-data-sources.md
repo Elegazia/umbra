@@ -3,7 +3,7 @@
 - **Status:** Accepted
 - **Date:** 2026-11-07 (revised 2026-11-15)
 - **Deciders:** Project owner
-- **Related:** ADR 0002 (record schema and `DataSource` interface, planned)
+- **Related:** [ADR 0002](0002-instrument-identity-and-definition.md) (instrument identity and definition); ADR 0007 (`DataSource` interface, planned)
 
 ## Context
 
@@ -189,7 +189,7 @@ MAS rules prohibit DPT service providers from offering retail customers financin
   - *Licence status changes:* most licence facts come from secondary sources. Confirm each venue on the MAS Financial Institutions Directory before depositing funds.
   - *Data-terms risk:* recording public feeds for private research is assumed acceptable. Re-read each venue's market-data terms before publishing any derived data.
 - **Follow-up work:**
-  - ADR 0002 defines the record schema and the `DataSource` / `Broker` interfaces. Because the scope spans asset classes and venues, records need an asset class and a venue in their key; that design belongs to ADR 0002.
+  - The record schema and the `DataSource` / `Broker` interfaces (since split into [ADR 0002](0002-instrument-identity-and-definition.md), ADR 0006 and ADR 0007). Because the scope spans asset classes and venues, records need an asset class and a venue in their key; that design belongs to ADR 0002.
   - Hosting region (Singapore or Tokyo, closer to the Asian venues) is an operations decision for the deployment milestone.
 
 ### Revisit triggers
