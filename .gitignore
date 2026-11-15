@@ -1,7 +1,7 @@
 # Python
 __pycache__/
-*.py[cod] 
-# pycache files
+*.py[cod]
+
 .venv/
 *.egg-info/
 dist/

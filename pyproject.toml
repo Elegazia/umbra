@@ -19,3 +19,29 @@ dev = [
     "pytest>=9.2.0",
     "ruff>=0.17.4",
 ]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors (PEP 8)
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes: unused imports/variables, undefined names
+    "I",    # isort: import ordering
+    "B",    # flake8-bugbear: likely bugs (mutable defaults, etc.)
+    "UP",   # pyupgrade: use modern syntax for your Python version
+    "N",    # pep8-naming
+    "SIM",  # flake8-simplify
+    "PT",   # flake8-pytest-style
+    "RUF",  # ruff-specific rules
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = [
+    "--import-mode=importlib",
+    "--strict-markers",
+    "--strict-config",
+    "-ra",
+]
