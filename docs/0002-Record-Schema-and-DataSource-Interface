@@ -6,9 +6,9 @@ Venue - The broker that we are using
 Venue_symbol - e.g. XBT/USDT (Base/Quote Currency)
 base_asset : BTC
 quote_asset : USDT
-instrument_type : 
+instrument_type :
 tick_size: Smallest price increment
 
-When reading from brokers: 
+When reading from brokers:
 Following considerations
-Asset-code normalisation needs a table. 
+Asset-code normalisation needs a table.
