@@ -1,6 +1,6 @@
 # ADR 0002: Instrument identity and definition schema
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-11-15
 - **Deciders:** Project owner
 - **Related:** [ADR 0001](0001-brokers-venues-and-data-sources.md) (venues in scope); ADR 0004 (storage format and query engine, planned); ADR 0005 (numeric representation, planned); ADR 0006 (market-data record schemas, planned)

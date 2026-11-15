@@ -7,12 +7,13 @@ Each significant design decision in Umbra is recorded as an ADR: the context, th
 | ADR | Title | Status |
 |---|---|---|
 | [0001](0001-brokers-venues-and-data-sources.md) | Brokers, execution venues and market-data sources | Accepted |
-| [0002](0002-instrument-identity-and-definition.md) | Instrument identity and definition schema | Proposed |
+| [0002](0002-instrument-identity-and-definition.md) | Instrument identity and definition schema | Accepted |
 | [0003](0003-pre-commit-ruff-via-uv.md) | Run ruff in pre-commit through uv-managed local hooks | Accepted |
 | 0004 | Storage format and query engine | Planned |
 | 0005 | Numeric representation of prices and quantities | Planned |
 | 0006 | Market-data record schemas and timestamp policy | Planned |
 | 0007 | `DataSource` interface | Planned |
+| 0008 | Latency target and deployment model | Planned |
 
 ## Rules
 
