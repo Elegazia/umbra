@@ -97,45 +97,60 @@ A pull interface is what lets one thread own the hot path and lets a recorded fi
 
 ### Frames
 
-A transport writes frames into the ring. A frame is one complete venue message, after TLS and WebSocket framing have been removed, with a small header:
+A transport writes frames into the ring. A frame is one complete venue message, after TLS and WebSocket framing have been removed, with a 32-byte header:
 
 | Field | Type | Notes |
 |---|---|---|
-| `ts_recv` | i64 | Receive time, ns since the Unix epoch (UTC), as in ADR 0006 |
+| `ts_recv` | i64 | Receive time, ns since the Unix epoch (UTC), as in ADR 0006; strictly increasing within a source |
+| `t_mono` | i64 | Monotonic-clock reading taken together with `ts_recv`, in ns; used only to measure latency |
+| `frame_seq` | u64 | Counter per source, incremented for every frame written to the core's ring |
 | `length` | u32 | Number of payload bytes |
 | `connection_id` | u16 | Identifies the connection within the source |
-| `kind` | u8 | 1 stream message, 2 snapshot, 3 connected, 4 disconnected |
+| `kind` | u8 | 1 stream message, 2 snapshot, 3 connected, 4 disconnected, 5 definitions updated |
 | reserved | u8 | Zero |
 | payload | `length` bytes | The message exactly as received; empty for kinds 3 and 4 |
 
-The ring holds frames back to back. Frames of kind 2 carry a snapshot as the venue returned it, for example the body of a REST response. Frames of kinds 3 and 4 tell the core about connection changes.
+The ring holds frames back to back. Frames of kind 2 carry a snapshot as the venue returned it, for example the body of a REST response. Frames of kinds 3 and 4 tell the core about connection changes. A frame of kind 5 marks the point at which changed instrument definitions take effect; its payload is the `fetched_at` time up to which the ADR 0002 registry is to be read.
+
+`ts_recv` is a wall-clock time and `t_mono` a monotonic one, in keeping with ADR 0006 rule 2. If the wall clock has not advanced, or has been stepped back, the transport uses the previous `ts_recv` plus one nanosecond, so that a source and a `ts_recv` together identify one frame. `t_mono` is the starting point of ADR 0008's internal tick-to-trade for a live source; a replay source sets it to the frame's scheduled send time. It is never copied into records.
 
 ### Interfaces
 
 The interfaces are described here in language-neutral terms.
 
 - `Source.poll()` returns the next frame, or nothing if none is ready. It never blocks. The returned frame is valid until the next call to `poll()` on that source.
-- `Decoder.decode(frame, out)` writes zero or more ADR 0006 records for one frame into a caller-provided buffer and returns how many it wrote. It does not allocate. It resolves venue symbols through a lookup table built from the ADR 0002 registry before the hot path starts, and it checks sequence contiguity as ADR 0006 rule 8 describes.
-- The session runs on the transport's thread or its own, never on the core's thread. It receives gap reports from the core through a second single-producer single-consumer ring running in the opposite direction.
+- `Decoder.decode(frame, out)` writes zero or more ADR 0006 records for one frame into a caller-provided buffer and returns how many it wrote. It does not allocate. It resolves venue symbols and precisions through a lookup table built from the ADR 0002 registry off the core's thread, and it checks sequence contiguity as ADR 0006 rule 8 describes.
+- The session runs on the transport's thread and shares its event loop, so that thread stays the only producer of the source's rings. Its snapshot requests are non-blocking and do not hold up the stream. It receives gap reports from the core through a second single-producer single-consumer ring running in the opposite direction.
 
-A replay source implements `poll()` by reading frames from the raw log. A live source's transport is the only producer of its ring, and the core is the only consumer.
+A replay source implements `poll()` by reading frames from the raw log. A live source's transport thread is the only producer of its rings, and the core is the only consumer of the core's ring.
 
 ### Rules
 
-1. The raw log contains exactly the frames the core consumed, in the order it consumed them, including snapshot and connection frames. The recorder reads them from its own ring, which the transport writes alongside the core's ring; the core thread never writes to disk.
-2. When a decoder reports a gap, or a frame of kind 4 arrives, the order book for the affected instruments is invalid. The session fetches a snapshot and writes it as a frame of kind 2. Venue-specific rules, such as discarding Binance updates older than the snapshot, are applied by the decoder for that venue.
-3. If the core's ring is full, the transport does not overwrite or silently drop frames. It closes the connection and writes a frame of kind 4 once there is space, so that the session resynchronises from a snapshot. Each occurrence is counted and reported.
-4. If the recorder's ring is full, the recording has a gap. The gap is recorded with its time range, and the affected intervals produce no derived candles (ADR 0006 rule 6).
-5. When several sources are replayed together, frames are merged in `ts_recv` order, with ties broken by source and `connection_id`.
-6. The Python reference implementation keeps the same shapes: `poll()` returns a frame or `None` without blocking. Its transport may use `asyncio` internally on its own thread, with a thread-safe queue in place of the ring; no coroutine appears in the interface.
+1. The transport writes each frame to the core's ring and to the recorder's ring. If the core's ring is full, the frame is written to neither (rule 5). The raw log therefore holds the frames the core received, in order for each source, including snapshot, connection and definition frames. The core thread never writes to disk.
+2. A book becomes invalid in three ways: the decoder detects a sequence gap, the order book's checksum does not match the venue's, or a frame of kind 4 arrives. In the first two cases the core reports the instrument to the session through the gap ring. In all three the session requests a snapshot, and the transport writes it as a frame of kind 2.
+3. Where a venue delivers snapshots separately from the stream, as Binance does over REST, updates that arrive before the snapshot may have to be applied after it. The decoder for such a venue holds the records for an instrument in a fixed-capacity, preallocated buffer while a snapshot is pending. When the snapshot arrives it emits the snapshot records, discards held records that the snapshot already includes, and emits the rest. If the buffer fills, it reports a gap again. These venue-specific rules stay in the decoder.
+4. On a frame of kind 4, the decoder emits a clear record flagged `SEQ_GAP` for every instrument it has decoded on that connection. The record stream then shows when each book stopped being maintained, instead of leaving a stale book that looks valid until the next snapshot.
+5. If the core's ring is full, the transport does not overwrite or silently drop frames. It closes the connection and writes a frame of kind 4 once there is space, so that the session resynchronises from a snapshot. Reconnection backs off if the ring stays full. Each occurrence is counted and reported.
+6. If only the recorder's ring is full, the frame still goes to the core and the recording has a gap, which shows as missing `frame_seq` values in the raw log. The recorder notes the time range, the affected intervals produce no derived candles (ADR 0006 rule 6), and a replay of that range is not expected to reproduce the live run.
+7. The decoder's lookup table changes only when the core consumes a frame of kind 5. The new table is built off the core's thread from the registry rows fetched up to the time in the frame. A replay loads the same rows at the same frame, so its output depends only on the raw log and the registry, which is append-only (ADR 0002).
+8. When several sources are replayed together, frames are merged in `ts_recv` order, with ties broken by source.
+9. The Python reference implementation keeps the same shapes: `poll()` returns a frame or `None` without blocking. Its transport may use `asyncio` internally on its own thread, with a thread-safe queue in place of the ring; no coroutine appears in the interface.
 
 ## Consequences
 
 The core is a loop that polls its sources, decodes frames and applies records, and it is the same loop in live trading and in replay. Each decoder can be tested on recorded frames without a network, and the JSON and binary decoders for a venue can be checked against each other as ADR 0008 requires.
 
-Every live source costs a thread, and the transport thread does TLS, WebSocket deframing and timestamping. Receive times are taken on that thread when a complete message has been read, so they include deframing but not the wait in the ring; the time spent in the ring is visible as the difference between `ts_recv` and the start of decoding.
+Every live source costs a thread, and the transport thread does TLS, WebSocket deframing and timestamping. Receive times are taken on that thread when a complete message has been read, so they include deframing but not the wait in the ring. The wait in the ring is measured on the monotonic clock, from `t_mono` to the start of decoding.
 
 Live processing order across several sources depends on the order in which the core polls them, while replay merges them by `ts_recv`. A replay therefore reproduces the order in which messages arrived, not necessarily the order in which a live run handled two messages that arrived within one polling cycle of each other.
+
+The latency log has one entry per frame, keyed by source and `frame_seq`, and carries the frame's `ts_recv`. Records join to it by source and `ts_recv`.
+
+Replay needs the instrument registry as well as the raw log. A raw log without the registry rows that were in force when it was recorded cannot be decoded reproducibly.
+
+A checksum failure is not visible in the record stream when it happens, only as the snapshot that follows it. Finding the exact point of failure means replaying the raw log through the order book.
+
+The recorder runs as a thread in the same process as the core, so a crash of the core also stops the recording. A recording that must survive the trading process runs as a separate recorder-only instance.
 
 Order entry is not covered by this ADR. Sending orders, and whether they share a connection with market data, is decided with the order path.
 

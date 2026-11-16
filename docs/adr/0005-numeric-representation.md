@@ -81,7 +81,7 @@ Binary-feed decoders copy mantissas and exponents straight into Umbra's records.
 
 Cross-instrument work, such as comparing BTC prices on two venues for lead–lag research, rescales one side first. This happens in signal and research code, not in the order book.
 
-The record layouts in ADR 0006 carry an exponent byte next to each price and quantity, or per record where all values share one exponent.
+The record layouts in ADR 0006 carry one price exponent and one quantity exponent per record, since every value in a record belongs to one instrument.
 
 Every arithmetic path needs overflow checks, and tests cover the boundaries: the largest quantities, the finest ticks and mixed exponents.
 

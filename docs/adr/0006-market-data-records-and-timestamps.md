@@ -60,7 +60,7 @@ Databento's market-by-order schema uses the same design: one fixed-width record 
 - Good, because one record shows the full path of a message.
 - Bad, because stage times differ on every replay, so the same raw input produces different records (fails D3), and the records grow by 16 or more bytes (D4).
 
-2B. Each record carries the event time and the receive time. Stage times go to a separate latency log keyed by the record's sequence.
+2B. Each record carries the event time and the receive time. Stage times go to a separate latency log keyed by the venue message the record came from.
 
 - Good, because records depend only on the market and on when the data arrived, so replay is deterministic (D3), and the header stays at 40 bytes (D4).
 - Bad, because per-stage latency analysis joins the latency log to the records.
@@ -165,7 +165,7 @@ The C++ core reads records in place and moves them through ring buffers without 
 
 A message that changes many levels produces many records, each with a 40-byte header. Research queries that need the book state at a point in time have to rebuild it from updates, or use snapshots produced separately.
 
-Latency analysis joins the latency log to the records by `sequence` and `instrument_id`.
+Latency analysis joins the latency log to the records by source and `ts_recv`, which [ADR 0007](0007-datasource-interface.md) makes unique for each venue message within a source.
 
 The validation milestone can compare venue candles with derived candles over every recorded period, and report differences per interval.
 
