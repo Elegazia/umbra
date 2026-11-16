@@ -1,6 +1,6 @@
 # ADR 0006: Market-data record schemas and timestamp policy
 
-- Status: Proposed
+- Status: Accepted
 - Date: 2026-11-15
 - Deciders: Project owner
 - Related: [ADR 0002](0002-instrument-identity-and-definition.md), [ADR 0005](0005-numeric-representation.md), ADR 0007, [ADR 0008](0008-latency-target-and-deployment-model.md)
