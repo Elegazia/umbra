@@ -1,6 +1,6 @@
 # Architecture Decision Records
 
-Each significant design decision in Umbra is recorded as an ADR: the context, the options considered, the decision and its consequences. The format follows [MADR](https://adr.github.io/madr/), with an added **Background** section explaining the underlying concepts.
+Each significant design decision in Umbra is recorded as an architecture decision record (ADR), giving the context, the options considered, the decision and its consequences. The format follows [MADR](https://adr.github.io/madr/), with an added Background section that explains the underlying concepts.
 
 ## Index
 
@@ -13,71 +13,67 @@ Each significant design decision in Umbra is recorded as an ADR: the context, th
 | 0005 | Numeric representation of prices and quantities | Planned |
 | 0006 | Market-data record schemas and timestamp policy | Planned |
 | 0007 | `DataSource` interface | Planned |
-| 0008 | Latency target and deployment model | Planned |
+| [0008](0008-latency-target-and-deployment-model.md) | Latency target and deployment model | Accepted |
 
 ## Rules
 
-1. **One decision per ADR.** If a document starts deciding a second thing, that decision gets its own ADR and the two link to each other.
-2. **Status lifecycle:** `Proposed` → `Accepted` → `Deprecated` or `Superseded by NNNN`. An ADR becomes `Accepted` only when the rationale has been reviewed by the deciders.
-3. **Accepted ADRs are immutable in substance.** Fix typos and broken links freely. To change a decision, write a new ADR that supersedes the old one and update both statuses, so the reasoning history stays intact.
-4. **Evidence is dated.** Time-sensitive facts (licences, prices, API terms) carry an access date and are marked as primary (the provider or regulator) or secondary (press, reviews, aggregators).
-5. **Constraints are requirements.** Context states what the system must satisfy, not who is building it.
-6. **Revisit triggers are measurable.** Each ADR names the conditions that would reopen it.
+1. Each ADR records one decision. If a document starts to decide a second thing, that decision gets its own ADR and the two link to each other.
+2. An ADR moves from Proposed to Accepted, and later to Deprecated or "Superseded by NNNN". It becomes Accepted only after the deciders have reviewed the rationale.
+3. Accepted ADRs are not changed in substance. Typos, wording and broken links can be fixed at any time. To change a decision, write a new ADR that supersedes the old one and update the status of both, so the history of the reasoning is kept.
+4. Facts that change over time, such as licences, prices and API terms, carry an access date and are marked as primary (from the provider or regulator) or secondary (press, reviews, aggregators).
+5. Context states what the system has to satisfy, not who is building it.
+6. Each ADR says what would cause it to be revisited, in terms that can be checked.
 
 ## Template
 
 ```markdown
 # ADR NNNN: <decision title>
 
-- **Status:** Proposed | Accepted | Deprecated | Superseded by NNNN
-- **Date:** YYYY-MM-DD (revised YYYY-MM-DD)
-- **Deciders:** <names or roles>
-- **Related:** <links to other ADRs>
+- Status: Proposed | Accepted | Deprecated | Superseded by NNNN
+- Date: YYYY-MM-DD (revised YYYY-MM-DD)
+- Deciders: <names or roles>
+- Related: <links to other ADRs>
 
 ## Context
 
-<The problem, why it needs a decision now, and the constraints as requirements.>
+<The problem, why it needs a decision now, and the constraints, stated as requirements.>
 
 ## Decision drivers
 
-Ranked. Hard constraints (must hold) first, then preferences (trade-offs).
+Hard constraints:
 
-1. **D1 (hard): …**
-2. **D2: …**
+- D1. <...>
 
-## Options considered
+Preferences, in order:
 
-### Option A: <name>
+- D2. <...>
+
+## Considered options
+
+### A. <name>
 
 <How it works.>
 
-| Driver | Assessment |
-|---|---|
-| D1 | … (evidence: [source], accessed YYYY-MM-DD) |
-
-- **Benefits:** …
-- **Costs:** …
+- Good, because <...> (D1).
+- Bad, because <...> (D2).
 
 ## Decision
 
-<The chosen option.>
+Chosen: <option>.
 
-**Rationale:** <Why, tied to the drivers.>
+<Why, in terms of the drivers, including the deciders' own reasoning.>
 
 ## Consequences
 
-- **Easier:** …
-- **Harder:** …
-- **Risks and mitigations:** …
-- **Follow-up work:** …
+<What becomes easier, what becomes harder, risks and how they are handled, follow-up work.>
 
-### Revisit triggers
+### Revisit when
 
-- <Measurable condition> → <what to reconsider>
+- <checkable condition> (<what to reconsider>);
 
 ## Background
 
-<The underlying concepts from first principles, with references.>
+<The underlying concepts, explained from first principles, with references.>
 
 ## Sources
 
