@@ -1,7 +1,7 @@
 # Instrument definition: field survey (Kraken, Binance, IBKR)
 
 - **Date:** 2026-11-07
-- **Purpose:** Input to [ADR 0002](0002-Record-Schema-and-DataSource-Interface). What each venue actually provides for an instrument definition, and where the venues disagree.
+- **Purpose:** Input to [ADR 0002](adr/0002-instrument-identity-and-definition.md). What each venue actually provides for an instrument definition, and where the venues disagree.
 - **Status:** Survey, not a decision. Nothing here fixes the schema.
 
 ## How this was checked

@@ -27,4 +27,7 @@ uv run pytest
 
 ## Design decisions
 
+Recorded as [architecture decision records](docs/adr/README.md).
+
 - [ADR 0001: Brokers, venues and data sources](docs/adr/0001-brokers-venues-and-data-sources.md)
+- [ADR 0003: Run ruff in pre-commit through uv](docs/adr/0003-pre-commit-ruff-via-uv.md)
