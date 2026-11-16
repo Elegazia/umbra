@@ -3,7 +3,7 @@
 - Status: Accepted
 - Date: 2026-11-15
 - Deciders: Project owner
-- Related: [ADR 0001](0001-brokers-venues-and-data-sources.md), ADR 0004, ADR 0005, ADR 0006
+- Related: [ADR 0001](0001-brokers-venues-and-data-sources.md), ADR 0004, [ADR 0005](0005-numeric-representation.md), [ADR 0006](0006-market-data-records-and-timestamps.md)
 
 ## Context
 

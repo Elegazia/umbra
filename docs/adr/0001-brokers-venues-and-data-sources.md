@@ -3,7 +3,7 @@
 - Status: Accepted
 - Date: 2026-11-07 (revised 2026-11-15)
 - Deciders: Project owner
-- Related: [ADR 0002](0002-instrument-identity-and-definition.md), ADR 0007
+- Related: [ADR 0002](0002-instrument-identity-and-definition.md), [ADR 0007](0007-datasource-interface.md)
 
 ## Context
 
