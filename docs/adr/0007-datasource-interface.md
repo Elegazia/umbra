@@ -1,6 +1,6 @@
 # ADR 0007: `DataSource` interface
 
-- Status: Proposed
+- Status: Accepted
 - Date: 2026-11-16
 - Deciders: Project owner
 - Related: [ADR 0002](0002-instrument-identity-and-definition.md), [ADR 0006](0006-market-data-records-and-timestamps.md), [ADR 0008](0008-latency-target-and-deployment-model.md)

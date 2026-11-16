@@ -12,7 +12,7 @@ Each significant design decision in Umbra is recorded as an architecture decisio
 | 0004 | Storage format and query engine | Planned |
 | [0005](0005-numeric-representation.md) | Numeric representation of prices and quantities | Accepted |
 | [0006](0006-market-data-records-and-timestamps.md) | Market-data record schemas and timestamp policy | Accepted |
-| [0007](0007-datasource-interface.md) | `DataSource` interface | Proposed |
+| [0007](0007-datasource-interface.md) | `DataSource` interface | Accepted |
 | [0008](0008-latency-target-and-deployment-model.md) | Latency target and deployment model | Accepted |
 
 ## Rules
