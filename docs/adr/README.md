@@ -10,8 +10,8 @@ Each significant design decision in Umbra is recorded as an architecture decisio
 | [0002](0002-instrument-identity-and-definition.md) | Instrument identity and definition schema | Accepted |
 | [0003](0003-pre-commit-ruff-via-uv.md) | Run ruff in pre-commit through uv-managed local hooks | Accepted |
 | 0004 | Storage format and query engine | Planned |
-| 0005 | Numeric representation of prices and quantities | Planned |
-| 0006 | Market-data record schemas and timestamp policy | Planned |
+| [0005](0005-numeric-representation.md) | Numeric representation of prices and quantities | Accepted |
+| [0006](0006-market-data-records-and-timestamps.md) | Market-data record schemas and timestamp policy | Proposed |
 | 0007 | `DataSource` interface | Planned |
 | [0008](0008-latency-target-and-deployment-model.md) | Latency target and deployment model | Accepted |
 

@@ -121,7 +121,7 @@ The hot path is C++ in the target design. Python remains the reference implement
 This ADR constrains the following decisions:
 
 - ADR 0005 must use integers for prices and quantities on the hot path.
-- ADR 0006 must define fixed-width records that can be read in place, with a timestamp field for each stage.
+- ADR 0006 must define fixed-width records that can be read in place, and a way to time each stage of each record.
 - ADR 0007 must define an interface that can be implemented in C++, without depending on Python objects or `asyncio`, and with the decoder as a separate component.
 
 Replay leaves out the network stack and tends to run with warm caches, so it overstates live performance. Replay figures are always labelled as internal tick-to-trade in replay, never as end-to-end latency. Interference from other tenants on a virtual server is reduced by using dedicated-core instances and repeating runs; the 10% reproducibility check detects it when it happens.
